@@ -78,12 +78,12 @@ jobs:
 
       - name: Smoke test (in-cluster)
         run: |
-          kubectl run curl --rm --restart=Never \
+          kubectl run curl --rm -i --restart=Never \
             --image=curlimages/curl:8.6.0 \
-            --command -- curl -sf http://myapp:8000/health
-          kubectl run curl-root --rm --restart=Never \
+            --command -- curl -sf --max-time 10 --retry 20 --retry-delay 2 --retry-all-errors http://myapp:8000/health
+          kubectl run curl-root --rm -i --restart=Never \
             --image=curlimages/curl:8.6.0 \
-            --command -- curl -sf http://myapp:8000/
+            --command -- curl -sf --max-time 10 --retry 20 --retry-delay 2 --retry-all-errors http://myapp:8000/
 
       - name: Docker meta
         id: meta
